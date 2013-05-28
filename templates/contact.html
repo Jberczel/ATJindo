@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block head %}<title>AT Jindo - Contact</title>{% endblock %}
+{% block content %}
+
+<div class="row-fluid">
+	<div class=" span6 offset3 well">
+  	<h3>Contact</h3>
+
+  	<p>Contact me with questions, concerns, comments, or just to say hi.  The message will go directly to my e-mail, so I should get back to you when I have cell phone service. </p>
+  		
+  	<form method="post">
+        <label>
+          <div>Name<small> (required)</small></div>
+          	<input type="text" name="author" value="{{author}}">
+        </label>
+  	    <label>
+        <div>E-Mail<small> (required)</small></div>
+            <input type="text" name="email" value="{{email}}"> 
+        </label>
+        <label>
+          <div>Message<small> (required)</small></div>
+          <textarea rows='10' class='span12' name="content">{{content}}</textarea>
+        </label>      
+        <input type="submit" class='btn btn-info'>
+    </form>
+  </div>
+</div>                                              
+
+{% endblock %}

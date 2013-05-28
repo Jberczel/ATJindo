@@ -1,0 +1,26 @@
+<!-- support page -->
+{% extends 'base.html' %}
+{% block head %}<title>AT Jindo - Support</title>{% endblock %}   
+{% block content %}
+
+<div class="row-fluid">
+	
+	<div class="span6 offset3 well">
+		<h3>Support</h3>
+		<h4>Rides</h4>
+		<p>If you live near a trail town and are free to give us a ride into or out of town, please don't hesitate to contact me.</p>
+		<h4>Buy us Food</h4>
+		<p>If you enjoy following the trail jorunal and want to help with buying us a meal, please consider a small donation. I'll be burning 4,000+ calories a day, so will probably be hungry 24/7. </p>
+			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+				<input type="hidden" name="cmd" value="_s-xclick">
+				<input type="hidden" name="hosted_button_id" value="D43QKMKECMMV2">
+				<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+				<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+			</form>
+		<h4>Anything</h4>
+		<p>We'll take all the help, support, and words of encouragement we can get, so feel free to contact us anytime.
+	</div>
+</div>
+
+{% endblock %}
+

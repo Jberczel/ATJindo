@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block head %}<title>AT Jindo - NewPost</title>{% endblock %}   
+{% block content %}
+  
+  <h3>new post</h3>
+  <p>Welcome, {{user}}! (<a href="{{url}}">sign out</a>)</p>
+
+    <form method="post">
+      <label>
+        <div>subject</div>
+        <input type="text" name="subject" value="{{subject}}">
+      </label>
+
+      <label>
+        <div>blog</div>
+        <textarea class='span6' rows='15' name="content">{{content}}</textarea>
+      </label>
+
+      <label>
+        <div>State</div>
+        <select name="state" value="{{state}}">
+          <option>XX</option>
+          <option>ME</option>
+          <option>NH</option>
+          <option>VT</option>
+          <option>MA</option>
+          <option>CT</option>
+          <option>NY</option>
+          <option>NJ</option>
+          <option>PA</option>
+          <option>MD</option>
+          <option>WV</option>
+          <option>VA</option>
+        </select>
+      </label>
+      <input type="submit">
+    </form>
+
+    <label>
+        <div>HTML</div>
+        <textarea class='span6' rows='15'>{{code}}</textarea>
+    </label>
+{% endblock %}
