@@ -4,7 +4,8 @@
 {% block head %}<title>AT Jindo - EditPost</title>{% endblock %}   
 
 {% block content %}
-  <h3>Edit post</h3>        
+  <h3>Edit post</h3>  
+  <p>Welcome, {{user}}! (<a href="{{url}}">sign out</a>)</p>      
   <form method="post">
       <label>
         <div>subject</div>
@@ -35,4 +36,9 @@
       </label>
       <input type="submit">
   </form>
+
+  <label>
+        <div>HTML</div>
+        <textarea class='span6' rows='15'>{{code}}</textarea>
+    </label>
 {% endblock %}

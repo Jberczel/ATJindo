@@ -71,9 +71,7 @@ class NewPost(Handler):
         #google users api authentication
         user = users.get_current_user()
 
-        if user:
-            #confirm administrator   
-            if users.is_current_user_admin():
+        if user and users.is_current_user_admin():  #confirm administrator                
                 #no markup, so adding these code snippets to easily add photos/videos from phone.   
                 code="""Img Code:
 
@@ -87,10 +85,7 @@ class NewPost(Handler):
 
                     <div class="embed-container"><iframe src="" frameborder="0" allowfullscreen></iframe></div> """       
                 self.render('newpost.html',code=code,user=user.nickname(),url=users.create_logout_url("/"))
-            else:
-                user = ("<a class='btn' href=\"%s\">Sign in</a>" %
-                        users.create_login_url("/newpost"))
-                self.render('login.html', user=user)                       
+                      
         else:
             user = ("<a class='btn' href=\"%s\">Sign in</a>" %
                         users.create_login_url("/newpost"))
@@ -141,8 +136,26 @@ class EditView(Handler):
 
 class EditPost(Handler):
     def get(self,state,post_id):
-        post = Post.get_by_id(int(post_id),parent=state_key(state))
-        self.render("editpost.html",subject=post.subject,content=post.content,state=state)
+        user = users.get_current_user()
+        if user and users.is_current_user_admin():
+            post = Post.get_by_id(int(post_id),parent=state_key(state))
+            code="""Img Code:
+
+                        <a href="?dl=1"><img src="dl=1" alt=""></a>
+
+                        Vimeo Code:
+
+                        <div class="embed-container"><iframe src="" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>
+
+                        Youtube Code:
+
+                        <div class="embed-container"><iframe src="" frameborder="0" allowfullscreen></iframe></div> """   
+            self.render("editpost.html",subject=post.subject,content=post.content,state=state,code=code,
+                        user=user.nickname(),url=users.create_logout_url("/"))
+        else:
+            user = ("<a class='btn' href=\"%s\">Sign in</a>" %
+                        users.create_login_url("/%s/%s/edit" % (state,post_id)))
+            self.render('login.html', user=user)
 
     def post(self,state,post_id):
         post = Post.get_by_id(int(post_id),parent=state_key(state))
@@ -191,6 +204,9 @@ def get_posts(state, update=False):
         memcache.set(state,posts)
     return posts
 
+NAME_RE = re.compile(r"^[ a-zA-Z_-]{2,30}$")
+def valid_name(username):
+    return username and NAME_RE.match(username)
 
 EMAIL_RE  = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
 def valid_email(email):
@@ -216,7 +232,7 @@ class Contact(Handler):
             contact.send()                 
             self.redirect('/thanks?n=%s' % author ) #redirects to permalink page  
         else:
-            self.render('contact.html', error="**Please enter valid and required fields.")
+            self.render('contact.html', error="*Sorry, your message did not send. Please enter valid and required fields.")
 
 class Support(Handler):
     def get(self):
