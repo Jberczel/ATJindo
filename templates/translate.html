@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block head %}<title>AT Jindo - Translate Post</title>{% endblock %}
+{% block content %}
+
+<h3>Translate Post</h3>
+<p>Welcome, {{user}}! (<a href="{{url}}">sign out</a>)</p>
+
+<form method="post">
+    <div>Subject - English</div>
+    <input type="text" readonly value="{{post.subject}}">
+    <label for="subject_translation">Subject - Korean</label>
+    <input type="text" id="subject_translation" name="subject_translation" value="{{post.subject_translation}}">
+
+    <br><br><br>
+
+    <div>Blog - English</div>
+    <textarea class='span6' rows='15' readonly>{{post.content}}</textarea>
+    <label for="content_translation">Blog - Korean</label>
+    <textarea class='span6' rows='15' id="content_translation" name="content_translation">{{post.content_translation}}</textarea>
+
+    <br>
+
+    <input type="submit">
+</form>
+{% endblock %}
