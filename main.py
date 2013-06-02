@@ -320,17 +320,17 @@ app = webapp2.WSGIApplication([
     ('/', HomePage),
     ('/newpost', NewPost),
     ('/edit', EditView),
-    ('/links',Links),
+    ('/links', Links),
     ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|VA|NC|TN|GA|XX)/(\d+)/edit', EditPost),
     ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|VA|NC|TN|GA|XX)/(\d+)', PermaLink),
     ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|VA|NC|TN|GA|XX)', StatePage),
     ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|VA|NC|TN|GA|XX)/(\d+)/translate', Translate),   
-    ('/about',About),  
-    ('/gear',Gear),
-    ('/FAQs',FAQs),
-    ('/support',Support),
-    ('/contact',Contact),
-    ('/thanks',Thanks)
+    ('/about', About),
+    ('/gear', Gear),
+    ('/FAQs', FAQs),
+    ('/support', Support),
+    ('/contact', Contact),
+    ('/thanks', Thanks)
 
-], debug=True)
+], config=config, debug=True)
 
