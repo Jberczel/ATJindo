@@ -110,7 +110,7 @@ class NewPost(Handler):
                 #no markup, so adding these code snippets to easily add photos/videos from phone.
                 code = """Img Code:
 
-                    <a href="?dl=1"><img src="dl=1" alt=""></a>
+                    <a href="?dl=1"><img src="?dl=1" alt=""></a>
 
                     Vimeo Code:
 
@@ -177,7 +177,7 @@ class EditPost(Handler):
             post = Post.get_by_id(int(post_id),parent=state_key(state))
             code="""Img Code:
 
-                        <a href="?dl=1"><img src="dl=1" alt=""></a>
+                        <a href="?dl=1"><img src="?dl=1" alt=""></a>
 
                         Vimeo Code:
 
@@ -190,7 +190,8 @@ class EditPost(Handler):
                         user=user.nickname(), url=users.create_logout_url("/"))
         else:
             user = ("<a class='btn' href=\"%s\">Sign in</a>" %
-                        users.create_login_url("/%s/%s/edit" % (state, post_id)))
+                        users.create_login_url("/blog/%s/%s/edit" % (state,post_id)))
+
             self.render('login.html', user=user)
 
     # TODO this is very hackable
@@ -204,7 +205,7 @@ class EditPost(Handler):
         memcache.set(state + post_id, post) #update permalink with edits.
         get_posts(state, True) #update filtered states with edits
         top_posts(True)
-        self.redirect('/%s/%s' % (state,post_id))
+        self.redirect('/blog/%s/%s' % (state,post_id))
 
 
 class About(Handler):
@@ -267,13 +268,13 @@ class Contact(Handler):
         if valid_name(author) and valid_email(email) and message:
             contact = mail.EmailMessage()
             contact.sender = 'jxberc@gmail.com'
-            contact.reply_to = '%s <%s>' % (author,email)
-            logging.error(contact.reply_to)
+            #contact.reply_to = '%s <%s>' % (author,email)
+            #logging.error(contact.reply_to)
             contact.to = 'jxberc@gmail.com'
             contact.subject = "New AT Jindo Message from: %s" % author
-            contact.body = message
-            contact.send()
-            self.redirect('/thanks?n=%s' % author ) #redirects to permalink page
+            contact.body = '%s <%s>, %s' % (author,email,message) 
+            contact.send()                 
+            self.redirect('/thanks?n=%s' % author ) #redirects to permalink page  
         else:
             self.render('contact.html', error="*Sorry, your message did not send. Please enter valid and required fields.")
 
@@ -312,22 +313,24 @@ class Translate(Handler):
         self.redirect('/%s/%s' % (state, post_id))
 
 config = {'webapp2_extras.sessions': {
-    'secret_key': 'my-super-secret-key',
+    'secret_key': 'my-super-secret-key'
 }}
 
 app = webapp2.WSGIApplication([
     ('/', HomePage),
     ('/newpost', NewPost),
     ('/edit', EditView),
-    ('/links', Links),
-    ('/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|VA|NC|TN|GA|XX)/(\d+)/edit', EditPost),
-    ('/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|VA|NC|TN|GA|XX)/(\d+)', PermaLink),
-    ('/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|VA|NC|TN|GA|XX)', StatePage),
-    ('/about', About),
-    ('/gear', Gear),
-    ('/FAQs', FAQs),
-    ('/support', Support),
-    ('/contact', Contact),
-    ('/thanks', Thanks),
-    ('/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|VA|NC|TN|GA|XX)/(\d+)/translate', Translate)
-], debug=True, config=config)
+    ('/links',Links),
+    ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|VA|NC|TN|GA|XX)/(\d+)/edit', EditPost),
+    ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|VA|NC|TN|GA|XX)/(\d+)', PermaLink),
+    ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|VA|NC|TN|GA|XX)', StatePage),
+    ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|VA|NC|TN|GA|XX)/(\d+)/translate', Translate),   
+    ('/about',About),  
+    ('/gear',Gear),
+    ('/FAQs',FAQs),
+    ('/support',Support),
+    ('/contact',Contact),
+    ('/thanks',Thanks)
+
+], debug=True)
+

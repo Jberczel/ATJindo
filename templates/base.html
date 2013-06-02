@@ -2,7 +2,7 @@
 <html>
   <head>
     {% block head %} {% endblock %}
-    <meta name='description' content="This website is a reocrd of my 2013 south-bound thru-hike on the Appalachian Trail with my dog Nara.  If all goes well, we will have walked 2,200 miles (5 million steps) across 14 States.">
+    <meta name='description' content="This website is a record of my 2013 south-bound Appalachian Trail thru-hike with my dog Nara.  If all goes well, we will have walked 2,200 miles (5 million steps) across 14 States.">
     <meta name="google-site-verification" content="CH_NYRhg_NJSvXVqnSJziiXpZl6npMjwvqP50AL7xcg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
@@ -28,7 +28,7 @@
             <div class="navbar">
               <div class="navbar-inner">     
                   <ul class="nav">
-                    <li><a href="/{% if state %}{{state}}{% else %}XX{% endif %}">Blog</a></li>
+                    <li><a href="/blog/{% if state %}{{state}}{% else %}XX{% endif %}">Blog</a></li>
                    
                     <li><a href="/FAQs">FAQs</a></li>
                                  
