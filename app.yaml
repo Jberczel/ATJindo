@@ -21,7 +21,7 @@ handlers:
 - url: /_ah/login_required
   script: main.app
 
-- url: /[A-Z]{2}/\d+/translate
+- url: /blog/[A-Z]{2}/\d+/translate
   login: admin
   script: main.app
 

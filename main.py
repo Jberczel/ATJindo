@@ -138,7 +138,7 @@ class NewPost(Handler):
             get_posts(state, True) # update state page filter
             top_posts(True) #update front page of blog
             post_id = str(new_post.key().id()) #finds db ojbect's key                   
-            self.redirect('/%s/%s' % (state, post_id)) #redirects to permalink page
+            self.redirect('/blog/%s/%s' % (state, post_id)) #redirects to permalink page
 
 
 class PermaLink(Handler):
@@ -310,10 +310,10 @@ class Translate(Handler):
         memcache.set(state + post_id, post)
         get_posts(state, True)
         top_posts(True)
-        self.redirect('/%s/%s' % (state, post_id))
+        self.redirect('/blog/%s/%s' % (state, post_id))
 
 config = {'webapp2_extras.sessions': {
-    'secret_key': 'my-super-secret-key'
+    'secret_key': 'my-super-secret-key',
 }}
 
 app = webapp2.WSGIApplication([
