@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python
 #
 # Copyright 2007 Google Inc.
@@ -15,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
 import logging
 import os
 import re
@@ -31,6 +31,9 @@ from webapp2_extras import sessions
 #load jinja2 templates from template folder
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir), autoescape=True)
+
+NAME_RE = re.compile(r"^[ a-zA-Z_-]{2,30}$")
+EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
 
 
 #helper function
@@ -106,26 +109,19 @@ class NewPost(Handler):
         #google users api authentication
         user = users.get_current_user()
 
-        if user and users.is_current_user_admin():  #confirm administrator
-                #no markup, so adding these code snippets to easily add photos/videos from phone.
-                code = """Img Code:
+        #no markup, so adding these code snippets to easily add photos/videos from phone.
+        code = """Img Code:
 
-                    <a href="?dl=1"><img src="?dl=1" alt=""></a>
+            <a href="?dl=1"><img src="?dl=1" alt=""></a>
 
-                    Vimeo Code:
+            Vimeo Code:
 
-                    <div class="embed-container"><iframe src="" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>
+            <div class="embed-container"><iframe src="" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>
 
-                    Youtube Code:
+            Youtube Code:
 
-                    <div class="embed-container"><iframe src="" frameborder="0" allowfullscreen></iframe></div> """
-                self.render('newpost.html', code=code, user=user.nickname(), url=users.create_logout_url("/"))
-
-        else:
-            user = ("<a class='btn' href=\"%s\">Sign in</a>" %
-                        users.create_login_url("/newpost"))
-            self.render('login.html', user=user)
-            #self.write("<html><body>%s</body></html>" % user)
+            <div class="embed-container"><iframe src="" frameborder="0" allowfullscreen></iframe></div> """
+        self.render('newpost.html', code=code, user=user.nickname(), url=users.create_logout_url("/"))
 
     def post(self):
         subject = self.request.get('subject')
@@ -133,12 +129,12 @@ class NewPost(Handler):
         state = self.request.get('state')
 
         if subject and content:
-            new_post = Post(subject=subject,content=content,parent=state_key(state)) #creates a new database object
-            new_post.put() #stores object
-            get_posts(state, True) # update state page filter
-            top_posts(True) #update front page of blog
-            post_id = str(new_post.key().id()) #finds db ojbect's key                   
-            self.redirect('/blog/%s/%s' % (state, post_id)) #redirects to permalink page
+            new_post = Post(subject=subject, content=content, parent=state_key(state))  # creates a new database object
+            new_post.put()  # stores object
+            get_posts(state, True)  # update state page filter
+            top_posts(True)  # update front page of blog
+            post_id = str(new_post.key().id())  # finds db object's key
+            self.redirect('/blog/%s/%s' % (state, post_id))  # redirects to permalink page
 
 
 class PermaLink(Handler):
@@ -156,10 +152,10 @@ class StatePage(Handler):
         ##posts = db.GqlQuery("select * from Post where ancestor is :1 order by created desc",state_key(state))  
         posts = get_posts(state)
         count = len(posts)
-        self.render('sblog.html',posts=posts,state=state, count=count)
+        self.render('sblog.html', posts=posts, state=state, count=count)
 
 
-def state_key(group = 'default'):
+def state_key(group='default'):
 #lookup ancestor key; used to pull all state posts
     return db.Key.from_path('Post', group)
 
@@ -173,26 +169,20 @@ class EditView(Handler):
 class EditPost(Handler):
     def get(self, state, post_id):
         user = users.get_current_user()
-        if user and users.is_current_user_admin():
-            post = Post.get_by_id(int(post_id),parent=state_key(state))
-            code="""Img Code:
+        post = Post.get_by_id(int(post_id), parent=state_key(state))
+        code = """Img Code:
 
-                        <a href="?dl=1"><img src="?dl=1" alt=""></a>
+                    <a href="?dl=1"><img src="?dl=1" alt=""></a>
 
-                        Vimeo Code:
+                    Vimeo Code:
 
-                        <div class="embed-container"><iframe src="" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>
+                    <div class="embed-container"><iframe src="" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>
 
-                        Youtube Code:
+                    Youtube Code:
 
-                        <div class="embed-container"><iframe src="" frameborder="0" allowfullscreen></iframe></div> """
-            self.render("editpost.html", subject=post.subject, content=post.content, state=state, code=code,
-                        user=user.nickname(), url=users.create_logout_url("/"))
-        else:
-            user = ("<a class='btn' href=\"%s\">Sign in</a>" %
-                        users.create_login_url("/blog/%s/%s/edit" % (state,post_id)))
-
-            self.render('login.html', user=user)
+                    <div class="embed-container"><iframe src="" frameborder="0" allowfullscreen></iframe></div> """
+        self.render("editpost.html", subject=post.subject, content=post.content, state=state, code=code,
+                    user=user.nickname(), url=users.create_logout_url("/"))
 
     # TODO this is very hackable
     def post(self, state, post_id):
@@ -202,10 +192,10 @@ class EditPost(Handler):
         post.state = self.request.get('state')
         post.put()
 
-        memcache.set(state + post_id, post) #update permalink with edits.
-        get_posts(state, True) #update filtered states with edits
+        memcache.set(state + post_id, post)  # update permalink with edits.
+        get_posts(state, True)  # update filtered states with edits
         top_posts(True)
-        self.redirect('/blog/%s/%s' % (state,post_id))
+        self.redirect('/blog/%s/%s' % (state, post_id))
 
 
 class About(Handler):
@@ -241,17 +231,17 @@ def top_posts(update=False):
 def get_posts(state, update=False):
     posts = memcache.get(state)
     if posts is None or update:
-        posts = db.GqlQuery("select * from Post where ancestor is :1 order by created desc",state_key(state))
+        posts = db.GqlQuery("select * from Post where ancestor is :1 order by created desc", state_key(state))
         logging.error("DB Query")
         posts = list(posts)
-        memcache.set(state,posts)
+        memcache.set(state, posts)
     return posts
 
-NAME_RE = re.compile(r"^[ a-zA-Z_-]{2,30}$")
+
 def valid_name(username):
     return username and NAME_RE.match(username)
 
-EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
+
 def valid_email(email):
     return not email or EMAIL_RE.match(email)
 
@@ -272,9 +262,9 @@ class Contact(Handler):
             #logging.error(contact.reply_to)
             contact.to = 'jxberc@gmail.com'
             contact.subject = "New AT Jindo Message from: %s" % author
-            contact.body = '%s <%s>, %s' % (author,email,message) 
+            contact.body = '%s <%s>, %s' % (author, email,message)
             contact.send()                 
-            self.redirect('/thanks?n=%s' % author ) #redirects to permalink page  
+            self.redirect('/thanks?n=%s' % author)  # redirects to permalink page
         else:
             self.render('contact.html', error="*Sorry, your message did not send. Please enter valid and required fields.")
 
