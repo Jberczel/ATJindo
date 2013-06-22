@@ -12,6 +12,12 @@ indexes:
 
 - kind: Post
   properties:
+  - name: deleted
+  - name: created
+    direction: desc
+
+- kind: Post
+  properties:
   - name: state
   - name: created
     direction: desc
@@ -19,5 +25,12 @@ indexes:
 - kind: Post
   ancestor: yes
   properties:
+  - name: created
+    direction: desc
+
+- kind: Post
+  ancestor: yes
+  properties:
+  - name: deleted
   - name: created
     direction: desc

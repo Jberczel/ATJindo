@@ -49,6 +49,7 @@ class Post(db.Model):
     subject_translation = db.StringProperty()
     content_translation = db.TextProperty()
     created = db.DateTimeProperty(auto_now_add=True)
+    deleted = db.BooleanProperty(default=False)
 
     def render(self):
         self._render_text = self.content.replace('\n', '<br>')
@@ -162,7 +163,7 @@ def state_key(group='default'):
 
 class EditView(Handler):
     def get(self):
-        posts = db.GqlQuery("select * from Post order by created desc")
+        posts = db.GqlQuery("select * from Post where deleted = :1 order by created desc")
         self.render("edit.html", posts=posts)
 
 
@@ -221,7 +222,7 @@ class Links(Handler):
 def top_posts(update=False):
     posts = memcache.get('top')
     if posts is None or update:
-        posts = db.GqlQuery("select * from Post order by created desc limit 10")
+        posts = db.GqlQuery("select * from Post where deleted = :1 order by created desc limit 10", False)
         logging.error("DB Query hit")
         posts = list(posts)
         memcache.set('top', posts)
@@ -231,7 +232,8 @@ def top_posts(update=False):
 def get_posts(state, update=False):
     posts = memcache.get(state)
     if posts is None or update:
-        posts = db.GqlQuery("select * from Post where ancestor is :1 order by created desc", state_key(state))
+        posts = db.GqlQuery("select * from Post where ancestor is :1 and deleted = :2 order by created desc",
+                            state_key(state), False)
         logging.error("DB Query")
         posts = list(posts)
         memcache.set(state, posts)
@@ -266,7 +268,8 @@ class Contact(Handler):
             contact.send()                 
             self.redirect('/thanks?n=%s' % author)  # redirects to permalink page
         else:
-            self.render('contact.html', error="*Sorry, your message did not send. Please enter valid and required fields.")
+            self.render('contact.html',
+                        error="*Sorry, your message did not send. Please enter valid and required fields.")
 
 
 class Support(Handler):
