@@ -29,6 +29,11 @@ handlers:
   login: admin
   script: main.app
 
+- url: /updateSchema
+  script: main.app
+  login: admin
+  secure: always
+
 - url: .*
   script: main.app
 
@@ -42,4 +47,4 @@ libraries:
 
 builtins:
 - appstats: on
-
+- deferred: on

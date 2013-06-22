@@ -23,6 +23,7 @@ import webapp2
 import jinja2
 
 from google.appengine.ext import db
+from google.appengine.ext import deferred
 from google.appengine.api import memcache
 from google.appengine.api import mail
 from google.appengine.api import users
@@ -305,6 +306,38 @@ class Translate(Handler):
         top_posts(True)
         self.redirect('/blog/%s/%s' % (state, post_id))
 
+#############################
+# Update Schema
+BATCH_SIZE = 100
+
+
+class UpdateHandler(Handler):
+    def get(self):
+        deferred.defer(UpdateSchema)
+        self.response.out.write('Schema migration successfully initiated.')
+
+
+def UpdateSchema(cursor=None, num_updated=0):
+    query = Post.all()
+    if cursor:
+        query.with_cursor(cursor)
+
+    to_put = []
+    for p in query.fetch(limit=BATCH_SIZE):
+        to_put.append(p)
+
+    if to_put:
+        db.put(to_put)
+        num_updated += len(to_put)
+        logging.debug('Put %d entities to Datastore for a total of %d', len(to_put), num_updated)
+        deferred.defer(UpdateSchema, cursor=query.cursor(), num_updated=num_updated)
+    else:
+        logging.debug('UpdateSchema complete with %d updates!', num_updated)
+
+# End Update Schema
+#############################
+
+
 config = {'webapp2_extras.sessions': {
     'secret_key': 'my-super-secret-key',
 }}
@@ -323,7 +356,8 @@ app = webapp2.WSGIApplication([
     ('/FAQs', FAQs),
     ('/support', Support),
     ('/contact', Contact),
-    ('/thanks', Thanks)
+    ('/thanks', Thanks),
+    ('/updateSchema', UpdateHandler)
 
 ], config=config, debug=True)
 
