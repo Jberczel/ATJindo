@@ -4,9 +4,8 @@
 {% block head %}<title>AT Jindo - EditPage</title>{% endblock %}   
 {% block content %}
 
-<h4>Blog Postings</h4>
 {% for p in posts %}
-	<p class=bpost><a href="{{p.key().parent().name()}}/{{p.key().id()}}/edit">{{p.subject}}</a></p>
+	<p class="bpost"><a href="/blog/{{p.key().parent().name()}}/{{p.key().id()}}/edit">{{p.subject}}</a></p>
 {% endfor %}
 
 {% endblock %}

@@ -115,6 +115,7 @@ class NewPost(Handler):
         code = """Img Code:
 
             <a href="?dl=1"><img src="?dl=1" alt=""></a>
+            <b></b>
 
             Vimeo Code:
 
@@ -164,7 +165,7 @@ def state_key(group='default'):
 
 class EditView(Handler):
     def get(self):
-        posts = db.GqlQuery("select * from Post where deleted = :1 order by created desc")
+        posts = db.GqlQuery("select * from Post where deleted = :1 order by created desc", False)
         self.render("edit.html", posts=posts)
 
 
@@ -175,6 +176,7 @@ class EditPost(Handler):
         code = """Img Code:
 
                     <a href="?dl=1"><img src="?dl=1" alt=""></a>
+                    <b></b>
 
                     Vimeo Code:
 
@@ -347,10 +349,10 @@ app = webapp2.WSGIApplication([
     ('/newpost', NewPost),
     ('/edit', EditView),
     ('/links', Links),
-    ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|VA|NC|TN|GA|XX)/(\d+)/edit', EditPost),
-    ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|VA|NC|TN|GA|XX)/(\d+)', PermaLink),
-    ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|VA|NC|TN|GA|XX)', StatePage),
-    ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|VA|NC|TN|GA|XX)/(\d+)/translate', Translate),   
+    ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|NoVa|SoVa|NC|TN|GA|XX)/(\d+)/edit', EditPost),
+    ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|NoVa|SoVa|NC|TN|GA|XX)/(\d+)', PermaLink),
+    ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|NoVa|SoVa|NC|TN|GA|XX)', StatePage),
+    ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|NoVa|SoVa|NC|TN|GA|XX)/(\d+)/translate', Translate),   
     ('/about', About),
     ('/gear', Gear),
     ('/FAQs', FAQs),
