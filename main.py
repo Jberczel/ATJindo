@@ -204,22 +204,42 @@ class EditPost(Handler):
 
 class About(Handler):
     def get(self):
-        self.render('about.html')
+        posts = top_posts()
+        if len(posts) > 0:
+            state = posts[0].key().parent().name()
+        else:
+            state = "XX"
+        self.render('about.html', state=state)
 
 
 class Gear(Handler):
     def get(self):
-        self.render('gear.html')
+        posts = top_posts()
+        if len(posts) > 0:
+            state = posts[0].key().parent().name()
+        else:
+            state = "XX"
+        self.render('gear.html', state=state)
 
 
 class FAQs(Handler):
     def get(self):
-        self.render('FAQ.html')
+        posts = top_posts()
+        if len(posts) > 0:
+            state = posts[0].key().parent().name()
+        else:
+            state = "XX"
+        self.render('FAQ.html',state=state)
 
 
 class Links(Handler):
     def get(self):
-        self.render('links.html')
+        posts = top_posts()
+        if len(posts) > 0:
+            state = posts[0].key().parent().name()
+        else:
+            state = "XX"
+        self.render('links.html',state=state)
 
 
 def top_posts(update=False):
@@ -253,7 +273,12 @@ def valid_email(email):
 
 class Contact(Handler):
     def get(self):
-        self.render('contact.html')
+        posts = top_posts()
+        if len(posts) > 0:
+            state = posts[0].key().parent().name()
+        else:
+            state = "XX"
+        self.render('contact.html',state=state)
 
     def post(self):
         author = self.request.get('author')
@@ -277,7 +302,12 @@ class Contact(Handler):
 
 class Support(Handler):
     def get(self):
-        self.render('help.html')
+        posts = top_posts()
+        if len(posts) > 0:
+            state = posts[0].key().parent().name()
+        else:
+            state = "XX"
+        self.render('help.html',state=state)
 
 
 class Thanks(Handler):
