@@ -241,6 +241,16 @@ class Links(Handler):
             state = "XX"
         self.render('links.html',state=state)
 
+class DataPage(Handler):
+    def get(self):
+        posts = top_posts()
+        if len(posts) > 0:
+            state = posts[0].key().parent().name()
+        else:
+            state = "finish"
+        self.render('datapage.html',state=state)
+
+
 
 def top_posts(update=False):
     posts = memcache.get('top')
@@ -380,15 +390,16 @@ app = webapp2.WSGIApplication([
     ('/edit', EditView),
     ('/links', Links),
     ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|NoVa|SoVa|NC|TN|GA|XX|finish)/(\d+)/edit', EditPost),
-    ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|NoVa|SoVa|NC|TN|GA|XX?finish)/(\d+)', PermaLink),
+    ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|NoVa|SoVa|NC|TN|GA|XX|finish)/(\d+)', PermaLink),
     ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|NoVa|SoVa|NC|TN|GA|XX|finish)', StatePage),
     ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|NoVa|SoVa|NC|TN|GA|XX|finish)/(\d+)/translate', Translate),   
     ('/about', About),
     ('/gear', Gear),
     ('/FAQs', FAQs),
-    ('/support', Support),
+    ('/links', Links),
     ('/contact', Contact),
     ('/thanks', Thanks),
+    ('/data',DataPage),
     ('/updateSchema', UpdateHandler)
 
 ], config=config, debug=True)
