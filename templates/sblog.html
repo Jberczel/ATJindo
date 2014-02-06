@@ -25,7 +25,7 @@
               ('/blog/TN','TN','TN'),
               ('/blog/NC','NC','NC'),
               ('/blog/GA','GA','GA'),
-              ('/blog/finish','finish','PostHike'),
+              ('/blog/finish','finish','PostHike')
           ] %}
 
           {% set active_page = active_page|default('/') %}
@@ -45,13 +45,22 @@
      {% if count == 0 %}
       <div class="well"><p>Sorry, no posts in this state yet.</p></div>
      {% endif %}
-   
-      {% for p in posts %}
-      <div class="well">
-          {{ p.render() | safe }}
-          
-      </div>
-      {% endfor %}
+
+     {% if lang == 'ko' %}  
+        {% for p in posts %}
+        <div class="well">
+            {{ p.render_ko() | safe }}          
+        </div>
+        {% endfor %}
+      {% else %}
+        {% for p in posts %}
+        <div class="well">
+            {{ p.render() | safe }}          
+        </div>
+        {% endfor %}
+      {% endif %}
+
+
     </div>         
   </div>  
 

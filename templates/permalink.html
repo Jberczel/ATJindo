@@ -1,14 +1,22 @@
 <!-- page for specific blog post link -->
 {% extends "base.html" %}
-{% block head %}<title>AT Jindo - {{post.subject}}</title>{% endblock %}   
-{% block content %}
 
-<div class="row-fluid">
-<div class="span8 offset2 well">
-  <h4 class="bpost">{{post.subject}}</h4>
-  <p>{{post.created.strftime("%b %d, %Y")}}<p>
-  <p>{{post.content.replace('\n', '<br>')|safe}}</p> 
-</div>
-</div>
+	{% block head %}<title>AT Jindo - {{post.subject}}</title>{% endblock %} 
 
-{% endblock %}
+	{% block content %}
+	<div class="row-fluid">
+	<div class="span8 offset2 well">
+	  <h4 class="bpost">{{post.subject}}</h4>
+	  <p>{{post.created.strftime("%b %d, %Y")}}<p>
+	  <p>{{post.content.replace('\n', '<br>')|safe}}</p> 
+	</div>
+	</div>
+	{% endblock %}
+
+
+
+
+
+
+
+

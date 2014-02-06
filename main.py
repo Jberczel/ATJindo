@@ -56,6 +56,14 @@ class Post(db.Model):
         self._render_text = self.content.replace('\n', '<br>')
         return render_str("post.html", p=self)
 
+    #added for translation    
+    def render_ko(self):
+        if self.content_translation:
+            self._render_text = self.content_translation.replace('\n', '<br>')
+        else:
+            self._render_text =  self.content.replace('\n', '<br>')
+        return render_str("post_ko.html", p=self)
+
 
 class Handler(webapp2.RequestHandler):
     def write(self, *a, **kw):
@@ -147,7 +155,11 @@ class PermaLink(Handler):
             post = Post.get_by_id(int(post_id), parent=state_key(state))
             logging.error("DB QUERY FOR PERMALINK")
             memcache.set(state + post_id, post)
-        self.render("permalink.html", post=post)
+        lang = self.request.get('lang')
+        if lang == 'ko':
+            self.render("permalink_ko.html", post=post)
+        else:
+            self.render("permalink.html", post=post)
 
 
 class StatePage(Handler):
@@ -155,7 +167,8 @@ class StatePage(Handler):
         ##posts = db.GqlQuery("select * from Post where ancestor is :1 order by created desc",state_key(state))  
         posts = get_posts(state)
         count = len(posts)
-        self.render('sblog.html', posts=posts, state=state, count=count)
+        lang = self.request.get('lang')
+        self.render('sblog.html', posts=posts, state=state, count=count, lang=lang) ##checks session language in sblog template
 
 
 def state_key(group='default'):
