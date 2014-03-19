@@ -247,12 +247,7 @@ class FAQs(Handler):
 
 class Links(Handler):
     def get(self):
-        posts = top_posts()
-        if len(posts) > 0:
-            state = posts[0].key().parent().name()
-        else:
-            state = "XX"
-        self.render('links.html',state=state)
+        self.render('links.html')
 
 class DataPage(Handler):
     def get(self):
@@ -262,8 +257,6 @@ class DataPage(Handler):
         else:
             state = "finish"
         self.render('datapage.html',state=state)
-
-
 
 def top_posts(update=False):
     posts = memcache.get('top')
@@ -307,7 +300,6 @@ class Contact(Handler):
             contact = mail.EmailMessage()
             contact.sender = 'jxberc@gmail.com'
             #contact.reply_to = '%s <%s>' % (author,email)
-            #logging.error(contact.reply_to)
             contact.to = 'jxberc@gmail.com'
             contact.subject = "New AT Jindo Message from: %s" % author
             contact.body = '%s <%s>, %s' % (author, email,message)
@@ -396,7 +388,6 @@ app = webapp2.WSGIApplication([
     ('/', HomePage),
     ('/newpost', NewPost),
     ('/edit', EditView),
-    ('/links', Links),
     ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|NoVa|SoVa|NC|TN|GA|XX|finish)/(\d+)/edit', EditPost),
     ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|NoVa|SoVa|NC|TN|GA|XX|finish)/(\d+)', PermaLink),
     ('/blog/(ME|NH|VT|MA|CT|NY|NJ|PA|MD|WV|NoVa|SoVa|NC|TN|GA|XX|finish)', StatePage),
