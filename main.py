@@ -295,13 +295,8 @@ def valid_email(email):
 
 
 class Contact(Handler):
-    def get(self):
-        posts = top_posts()
-        if len(posts) > 0:
-            state = posts[0].key().parent().name()
-        else:
-            state = "XX"
-        self.render('contact.html',state=state)
+    def get(self):      
+        self.render('contact.html')
 
     def post(self):
         author = self.request.get('author')
