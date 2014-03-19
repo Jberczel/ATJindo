@@ -107,11 +107,7 @@ class Handler(webapp2.RequestHandler):
 
 class HomePage(Handler):
     def get(self):
-        posts = top_posts()
-        state = 'XX'
-        if len(posts) > 0:
-            state = posts[0].key().parent().name()
-        self.render('home.html', state=state)
+        self.render('home.html')
 
 
 class NewPost(Handler):
@@ -246,12 +242,7 @@ class Links(Handler):
 
 class DataPage(Handler):
     def get(self):
-        posts = top_posts()
-        if len(posts) > 0:
-            state = posts[0].key().parent().name()
-        else:
-            state = "finish"
-        self.render('datapage.html',state=state)
+        self.render('datapage.html')
 
 def top_posts(update=False):
     posts = memcache.get('top')
