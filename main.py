@@ -237,12 +237,7 @@ class Gear(Handler):
 
 class FAQs(Handler):
     def get(self):
-        posts = top_posts()
-        if len(posts) > 0:
-            state = posts[0].key().parent().name()
-        else:
-            state = "XX"
-        self.render('FAQ.html',state=state)
+        self.render('FAQ.html')
 
 
 class Links(Handler):
