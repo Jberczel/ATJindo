@@ -46,21 +46,16 @@
       <div class="well"><p>Sorry, no posts in this state yet.</p></div>
      {% endif %}
 
-     {% if lang == 'ko' %}  
+     
         {% for p in posts %}
         <div class="well">
+          {% if lang == 'ko' %}          
             {{ p.render_ko() | safe }}          
+          {% else %}
+            {{ p.render() | safe }}  
+          {% endif %}        
         </div>
         {% endfor %}
-      {% else %}
-        {% for p in posts %}
-        <div class="well">
-            {{ p.render() | safe }}          
-        </div>
-        {% endfor %}
-      {% endif %}
-
-
     </div>         
   </div>  
 
