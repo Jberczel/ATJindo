@@ -52,20 +52,6 @@ class Post(db.Model):
     deleted = db.BooleanProperty(default=False)
 
 
-
-    def render(self):
-        self._render_text = self.content.replace('\n', '<br>')
-        return render_str("post.html", p=self)
-
-    #added for translation    
-    def render_ko(self):
-        if self.content_translation:
-            self._render_text = self.content_translation.replace('\n', '<br>')
-        else:
-            self._render_text =  self.content.replace('\n', '<br>')
-        return render_str("post_ko.html", p=self)
-
-
 class Handler(webapp2.RequestHandler):
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
@@ -150,13 +136,9 @@ class PermaLink(Handler):
         post = memcache.get(state + post_id)
         if post is None:
             post = Post.get_by_id(int(post_id), parent=state_key(state))
-            logging.error("DB QUERY FOR PERMALINK")
             memcache.set(state + post_id, post)
         lang = self.request.get('lang')
-        if lang == 'ko':
-            self.render("permalink_ko.html", post=post)
-        else:
-            self.render("permalink.html", post=post)
+        self.render("permalink.html", post=post, lang=lang)
 
 
 class StatePage(Handler):
@@ -298,7 +280,6 @@ class Translate(Handler):
         post = memcache.get(state + post_id)
         if post is None:
             post = Post.get_by_id(int(post_id), parent=state_key(state))
-            logging.info("DB query for translate")
             memcache.set(state + post_id, post)
 
         nickname = users.get_current_user().nickname()

@@ -41,24 +41,38 @@
 
   <div class="row-fluid">
      <!-- blog column -->  
-    <div class="span6 offset3">   
+    <div class="span6 offset3"> 
+
      {% if count == 0 %}
       <div class="well"><p>Sorry, no posts in this state yet.</p></div>
-     {% endif %}
+     {% endif %} 
 
-     
         {% for p in posts %}
-        <div class="well">
-          {% if lang == 'ko' %}          
-            {{ p.render_ko() | safe }}          
-          {% else %}
-            {{ p.render() | safe }}  
-          {% endif %}        
-        </div>
+           <div class="well">
+              <h4 class="bpost">
+                <a href="/blog/{{p.key().parent().name()}}/{{p.key().id()}}">
+                  {% if lang == 'ko' %}
+                      {{p.subject_translation}}
+                    {% else %}
+                      {{p.subject}}
+                    {% endif %}
+                </a>
+              </h4>
+
+            <p>{{p.created.strftime("%b %d, %Y")}}<p>
+
+            <p>
+              {% if lang == "ko" and p.content_translation %} <!--checks to see if in korean (need to update with js in future -->
+                  {{p.content_translation.replace('\n', '<br>')|safe}}
+              {% else %}
+                  {{p.content.replace('\n', '<br>')|safe}}
+              {% endif %}
+            </p>      
+          </div>
         {% endfor %}
+
     </div>         
   </div>  
-
 
 {% endblock %}   
 
