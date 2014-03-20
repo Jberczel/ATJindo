@@ -36,7 +36,6 @@ jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir), aut
 NAME_RE = re.compile(r"^[ a-zA-Z_-]{2,30}$")
 EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
 
-
 #helper function
 def render_str(template, **params):
     t = jinja_env.get_template(template)
@@ -51,6 +50,8 @@ class Post(db.Model):
     content_translation = db.TextProperty()
     created = db.DateTimeProperty(auto_now_add=True)
     deleted = db.BooleanProperty(default=False)
+
+
 
     def render(self):
         self._render_text = self.content.replace('\n', '<br>')
@@ -213,22 +214,12 @@ class EditPost(Handler):
 
 class About(Handler):
     def get(self):
-        posts = top_posts()
-        if len(posts) > 0:
-            state = posts[0].key().parent().name()
-        else:
-            state = "XX"
-        self.render('about.html', state=state)
+        self.render('about.html')
 
 
 class Gear(Handler):
     def get(self):
-        posts = top_posts()
-        if len(posts) > 0:
-            state = posts[0].key().parent().name()
-        else:
-            state = "XX"
-        self.render('gear.html', state=state)
+        self.render('gear.html')
 
 
 class FAQs(Handler):
@@ -294,16 +285,6 @@ class Contact(Handler):
         else:
             self.render('contact.html',
                         error="*Sorry, your message did not send. Please enter valid and required fields.")
-
-
-class Support(Handler):
-    def get(self):
-        posts = top_posts()
-        if len(posts) > 0:
-            state = posts[0].key().parent().name()
-        else:
-            state = "XX"
-        self.render('help.html',state=state)
 
 
 class Thanks(Handler):
